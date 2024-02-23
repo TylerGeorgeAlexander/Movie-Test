@@ -55,14 +55,36 @@ const generateSchedule = async () => {
     return { title, releaseYear, mpaaRating, runTime };
   });
 
-  console.log(`\nSchedule for ${date.format('dddd MM/DD/YYYY')}\n`);
+//   console.log(`\nSchedule for ${date.format('dddd MM/DD/YYYY')}\n`);
+
+//   movies.forEach(movie => {
+//     const showtimes = calculateShowtimes(movie, openingTime, closingTime);
+//     console.log(`${movie.title} - Rated ${movie.mpaaRating}, ${movie.runTime}`);
+//     showtimes.forEach(showtime => console.log(`  ${showtime}`));
+//     console.log('');
+//   });
+
+  // Initialize the output with the schedule date header
+  let output = `Schedule for ${date.format('dddd MM/DD/YYYY')}\n\n`;
 
   movies.forEach(movie => {
     const showtimes = calculateShowtimes(movie, openingTime, closingTime);
-    console.log(`${movie.title} - Rated ${movie.mpaaRating}, ${movie.runTime}`);
-    showtimes.forEach(showtime => console.log(`  ${showtime}`));
-    console.log('');
+    output += `${movie.title} - Rated ${movie.mpaaRating}, ${movie.runTime}\n`;
+    showtimes.forEach(showtime => output += `  ${showtime}\n`);
+    output += '\n'; // Add an extra newline for spacing between movies
   });
+
+  // Ensure the /dist directory exists
+  const distPath = path.resolve(__dirname, 'dist');
+  if (!fs.existsSync(distPath)) {
+    fs.mkdirSync(distPath);
+  }
+
+  // Save the output to a file
+  const outputPath = path.join(distPath, 'output.csv');
+  fs.writeFileSync(outputPath, output, 'utf8');
+
+  console.log(`Schedule saved to ${outputPath}`);
 };
 
 generateSchedule().catch(err => console.error(err));
