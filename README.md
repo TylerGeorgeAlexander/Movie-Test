@@ -43,7 +43,7 @@ node index.js
 When you run the application, it will prompt you to enter the path to the movie list file and the date for which you want to generate the schedule:
 
 ```
-? Enter the path to the movie list file: example-input.csv
+? Enter the path to the movie list file: input.csv
 ? Enter the date for the schedule (MM/DD/YYYY): 02/24/2024
 ```
 
