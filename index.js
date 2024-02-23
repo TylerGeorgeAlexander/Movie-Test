@@ -11,21 +11,35 @@ const runtimeToMinutes = (runtime) => {
 
 // Calculate showtimes for a single movie
 const calculateShowtimes = (movie, openingTime, closingTime) => {
-  const setupTime = 60; // 1 hour setup time before any movies
-  const changeOverTime = 35; // 35 minutes between showings
-  const runtime = runtimeToMinutes(movie.runTime);
-  let showtimes = [];
-  let currentTime = openingTime.clone().add(setupTime, 'minutes');
-
-  while (currentTime.clone().add(runtime + changeOverTime, 'minutes').isBefore(closingTime)) {
-    const endTime = currentTime.clone().add(runtime, 'minutes');
-    showtimes.push(`${currentTime.format('HH:mm')} - ${endTime.format('HH:mm')}`);
-    currentTime.add(runtime + changeOverTime, 'minutes');
-  }
-
-  return showtimes;
-};
-
+    const setupTime = 60; // 1 hour setup time before any movies
+    const changeOverTime = 35; // 35 minutes between showings
+    const runtime = runtimeToMinutes(movie.runTime);
+    let showtimes = [];
+  
+    // Start the first movie at an adjusted time after opening to align with a 5-minute interval
+    let currentTime = openingTime.clone().add(setupTime, 'minutes');
+  
+    // Function to adjust the time to the next 5-minute interval if not already on one
+    const adjustToNext5MinuteInterval = (time) => {
+      if (time.minute() % 5 !== 0) {
+        return time.add(5 - (time.minute() % 5), 'minutes');
+      }
+      return time;
+    };
+  
+    // Adjust the start time of the first movie to the next 5-minute interval
+    currentTime = adjustToNext5MinuteInterval(currentTime);
+  
+    while (currentTime.clone().add(runtime, 'minutes').isBefore(closingTime)) {
+      const endTime = currentTime.clone().add(runtime, 'minutes');
+      showtimes.push(`${currentTime.format('HH:mm')} - ${endTime.format('HH:mm')}`);
+      // Adjust the next start time by adding runtime and changeover time, then round up to the next 5-minute interval
+      currentTime = adjustToNext5MinuteInterval(endTime.add(changeOverTime, 'minutes'));
+    }
+  
+    return showtimes;
+  };
+    
 // Main function to read file and generate schedule
 const generateSchedule = async () => {
   const { filePath, scheduleDate } = await inquirer.prompt([
