@@ -69,6 +69,7 @@ const generateSchedule = async () => {
     return { title, releaseYear, mpaaRating, runTime };
   });
 
+//   LOGGING THE OUTPUT INITIALLY
 //   console.log(`\nSchedule for ${date.format('dddd MM/DD/YYYY')}\n`);
 
 //   movies.forEach(movie => {
@@ -95,7 +96,7 @@ const generateSchedule = async () => {
   }
 
   // Save the output to a file
-  const outputPath = path.join(distPath, 'output.csv');
+  const outputPath = path.join(distPath, 'output.txt'); // Note the text file ext, though the initial promp uses a .txt I chose to save it in a csv format.
   fs.writeFileSync(outputPath, output, 'utf8');
 
   console.log(`Schedule saved to ${outputPath}`);
