@@ -43,11 +43,11 @@ const generateSchedule = async () => {
     }
   ]);
 
-  const date = moment(scheduleDate, 'MM/DD/YYYY');
+  const date = moment(scheduleDate, 'MM/DD/YYYY', true);
   const isWeekend = date.day() === 0 || date.day() === 6;
 
-  const openingTime = isWeekend ? moment(scheduleDate).hour(10).minute(30) : moment(scheduleDate).hour(8);
-  const closingTime = isWeekend ? moment(scheduleDate).hour(23).minute(30) : moment(scheduleDate).hour(23);
+  const openingTime = isWeekend ? moment(scheduleDate, 'MM/DD/YYYY', true).set({hour: 10, minute: 30}) : moment(scheduleDate, 'MM/DD/YYYY', true).set({hour: 8, minute: 0});
+  const closingTime = isWeekend ? moment(scheduleDate, 'MM/DD/YYYY', true).set({hour: 23, minute: 30}) : moment(scheduleDate, 'MM/DD/YYYY', true).set({hour: 23, minute: 0});
 
   const data = fs.readFileSync(path.resolve(filePath), 'utf8');
   const movies = data.split('\n').slice(1).map(line => {
